@@ -5,7 +5,10 @@ import os
 
 VOICE_PATH = "piper_voices/en_US-lessac-medium.onnx"
 voice = None
-p = pyaudio.PyAudio()
+try:
+    p = pyaudio.PyAudio()
+except:
+    print("Couldn't load the pyaudio engine.")
 
 
 def get_voice():

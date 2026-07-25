@@ -37,7 +37,7 @@ def generate(prompt):
             if 'content' in delta:
                 yield delta['content']
     except Exception as e:
-        print("Generation failed. {e}")
+        print(f"Generation failed. {e}")
         yield "I ran into an issue generating a response."
 
 

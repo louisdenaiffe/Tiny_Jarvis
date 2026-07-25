@@ -3,7 +3,8 @@ import os
 from scipy.io import wavfile
 import numpy as np
 import queue
-
+import subprocess
+from speaker import speak
 
 try:
     import sounddevice as sd
@@ -80,11 +81,20 @@ def get_latest_recordings():
 
 def safe_shutdown():
     print("Shutdown button held, safely powering off rpi5")
-    os.system("sudo poweroff")
+    try:
+        subprocess.run(["sudo", "poweroff"], check=True)
+    except subprocess.CalledProcessError :
+        print("Necessary permissions missing to run sudo poweroff... read the recommendation in README.md")
+        try:
+            speak(["Failed to shutdown... Have you read the recommendation in the README.md?"])
+        except:
+            print("Speaker unavailable")
 
-
-if GPIO_AVAILABLE:
-    if SOUNDDEVICE_AVAILABLE:
+def init_listener():
+    if GPIO_AVAILABLE and SOUNDDEVICE_AVAILABLE:
         btn_a.when_pressed = start_recording
         btn_a.when_released = stop_recording
         btn_b.when_held = safe_shutdown
+        print("GPIO listeners attached")
+    elif not GPIO_AVAILABLE:
+        print("GPIO not available. Button input disabled.")
