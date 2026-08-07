@@ -6,6 +6,7 @@ import queue
 import subprocess
 from speaker import speak
 
+
 try:
     import sounddevice as sd
     SOUNDDEVICE_AVAILABLE = True
