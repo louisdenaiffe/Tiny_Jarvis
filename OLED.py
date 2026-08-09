@@ -14,6 +14,7 @@ class DummyDevice:
     def display(self, img):
         pass
 
+
 try: 
     serial = i2c(port=1, address=0x3C)
     device = ssd1306(serial, width=128, height=64)
@@ -21,7 +22,6 @@ try:
 except Exception as e:
     print(f"Display not found or I2C error ({e}). Running in headless mode.")
     device = DummyDevice()
-
 
 
 def show_image(file_path, stop_event=None):   # stop_event is the thread signal here
