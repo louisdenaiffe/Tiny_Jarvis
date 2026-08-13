@@ -10,3 +10,5 @@ numpy
 pyaudio
 # llama-cpp-python because a native compilation is preferred
 word2number
+requests
+psutil

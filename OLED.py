@@ -6,6 +6,9 @@ import time
 import threading
 import os
 import textwrap
+import psutil
+from datetime import datetime
+
 
 class DummyDevice:
     def __init__(self):
@@ -55,6 +58,50 @@ def oled_text(text, font_size=12, stop_event=None):
     device.display(image)
 
 
+def get_sys_metrics():
+    now = datetime.now().strftime("%I:%M %p")
+    try:
+        temps = psutil.sensors_temperatures()
+        if "cpu_thermal" in temps:
+            cpu_temp = f"{int(temps['cpu_thermal'][0].current)}°C"
+        else:
+            cpu_temp = f"{int(psutil.cpu_percent())}% CPU"
+    except Exception:
+        cpu_temp = "N/A"
+    try:
+        battery = psutil.sensors_battery()
+        bat_str = f"{int(battery.percent)}%" if battery else "PWR"
+    except Exception:
+        bat_str = "PWR"
+    return now, cpu_temp, bat_str
+
+
+def oled_metrics_loop(stop_event=None):
+    heartbeat = True
+    while stop_event is None or not stop_event.is_set():
+        image = Image.new("1", (device.width, device.height), "black")
+        draw = ImageDraw.draw(image)
+        font = ImageFont.load_default()
+
+        now, cpu_temp, bat_str = get_sys_metrics()
+
+        draw.text((0, 2), now, font=font, fill=255)
+        draw.text((85, 2), f"BAT:{bat_str}", font=font, fill=255)
+        draw.line((0, 18, 128, 18), fill=255)
+        draw.text((0, 26), f"CPU temp: {cpu_temp}", font=font, fill=255)
+        draw.text((0, 40), "Status: IDLE", font=font, fill=255)
+
+        if heartbeat:
+            draw.rectangle((122, 58, 124,  60), fill=255)
+        heartbeat = not heartbeat
+
+        device.display(image)
+        for i in range(10):
+            if stop_event and stop_event.is_set():
+                break
+            time.sleep(0.1)
+
+
 class AssistantDisplay:
     def __init__(self):
         self.switch = threading.Event()
@@ -68,6 +115,11 @@ class AssistantDisplay:
         self.stop()
         self.switch.clear()
         self.thread = threading.Thread(target=oled_text, args=(text, 12, self.switch))
+        self.thread.start()
+    def show_metrics(self):
+        self.stop()
+        self.switch.clear()
+        self.thread = threading.Thread(target=oled_metrics_loop, args=(self.switch,))
         self.thread.start()
     def stop(self):
         self.switch.set()

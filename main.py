@@ -5,9 +5,10 @@ from OLED import AssistantDisplay
 from ai import generate, sentence_buffer
 from cooking.cooking_helper import load_recipes, handle_cooking
 from timer import handle_timer
-# from music import handle_music
+from music import handle_music
 import os
 import time
+import random
 
 
 def main():
@@ -26,7 +27,7 @@ def initialize():
     ensure_recordings_folder()
     load_recipes()
     print("Tiny Jarvis is active and listening!")
-    d.show_image("home.png")
+    d.show_metrics()
     return d
 
 
@@ -70,6 +71,8 @@ def handle_prompt(prompt, d):
     if prompt.lower().startswith("play"):
         # return handle_music(prompt, d)
         pass
+    if prompt.lower().startswith("flip"):
+        return handle_flip()
     return handle_ai(prompt, d)
 
 
@@ -84,6 +87,10 @@ def cleanup_recording(audio_file, d):
     if os.path.exists(audio_file):
         os.remove(audio_file)
         print("Deleted recording file")
+
+
+def handle_flip():
+    return random.choice(["Heads", "Tails"])
 
 
 if __name__ == "__main__":

@@ -52,7 +52,7 @@ The other button serves a single purpose: to turn off the Raspberry Pi 5 safely 
 **Features:**
  - "Play ..." --> Tiny_Jarvis will search a free online music database for that query using Mopidy and stream the music through the speakers. (Still in development, and only works when connected to wi-fi)
  - "Cooking ..." --> Tiny_Jarvis will output a random recipe from a list, display the ingredients, and read the recipe out loud.
- - "Set a timer of..." --> Tiny_Jarvis will set a timer for the needed time, and display it in real time on the OLED screen.
+ - "Set a timer of ... minutes" --> Tiny_Jarvis will set a timer for the needed time, and display it in real time on the OLED screen.
 
 
 # How to install

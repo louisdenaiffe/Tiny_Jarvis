@@ -17,15 +17,15 @@ def handle_music(prompt, d):
         track = tracks[0]
         print(f"Playing : {track['name']}")
         play_track(track)
-        d.show_image("home.png")
+        d.show_metrics()
         return f"Playing {track['name']}"
     except requests.exceptions.ConnectionError:
         print("Could not connect to Mopidy")
-        d.show_image('home.png')
+        d.show_metrics()
         return "I can't access the music player right now. Are you connected to wifi?"
     except Exception as e:
         print(f"Music error: {e}")
-        d.show_image('home.png')
+        d.show_metrics()
         return "Something went wrong while trying to play the music."
 
 
