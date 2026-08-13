@@ -43,13 +43,16 @@ Tiny_Jarvis/
 The OLED screen shows an `IDLE` animation when idle.\
 User presses a button, gives a command, and releases the button when done speaking.\
 The captured audio is translated into text by [faster-whisper](https://pypi.org/project/faster-whisper/0.3.0/).
-That text is given as a prompt to a model of your choice using [llama.cpp](https://github.com/abetlen/llama-cpp-python), preferably a low-parameter model like Llama-3.2-3B, balancing speed and quality.\
+That text is given as a prompt to a model of your choice using [llama.cpp](https://github.com/abetlen/llama-cpp-python) (optimized for Raspberry pi 5), preferably a low-parameter model like Llama-3.2-3B, balancing speed and quality.\
 The model's ouput is streamed into [Piper TTS](https://github.com/rhasspy/piper), a text-to-speech model, and played through the speakers (stereo sound).\
-OLED screen shows `THINKING` and `SPEAKING` animations meanwhile.
+OLED screen display a variety of animations meanwhile.\
 The other button serves a single purpose: to turn off the Raspberry Pi 5 safely through `sudo poweroff`.
 
-If the user's prompt starts with "Play ...", then the prompt is rerouted through [librespot](https://github.com/librespot-org/librespot) to play some music using Spotify premium! 
-> Note: This only works when connected to Wi-fi. Also this is still in development.
+
+**Features:**
+ - "Play ..." --> Tiny_Jarvis will search a free online music database for that query using Mopidy and stream the music through the speakers. (Still in development, and only works when connected to wi-fi)
+ - "Cooking ..." --> Tiny_Jarvis will output a random recipe from a list, display the ingredients, and read the recipe out loud.
+ - "Set a timer of..." --> Tiny_Jarvis will set a timer for the needed time, and display it in real time on the OLED screen.
 
 
 # How to install
@@ -87,3 +90,5 @@ username ALL=(ALL) NOPASSWD: /sbin/poweroff, /sbin/reboot
 # Hardware
 
 See [JOURNAL.md](JOURNAL.md)
+
+Check out the PCB files in `pcb/`.
