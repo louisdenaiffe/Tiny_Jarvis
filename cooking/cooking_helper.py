@@ -25,3 +25,9 @@ def format_cooking_sentence(recipe_object):
         f"Recipe: {recipe_object['Recipe']}."
         f"Total preparation and cooking time: {recipe_object['Prep & Cooking Time']}."
     )
+
+
+def handle_cooking(d):
+    recipe = get_random_recipe()
+    d.show_text(recipe['Ingredients'])
+    return [format_cooking_sentence(recipe)]

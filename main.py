@@ -3,13 +3,11 @@ import listener # Same here, this will initialize listener.py once
 from transcriber import transcribe_audio
 from OLED import AssistantDisplay
 from ai import generate, sentence_buffer
-from cooking.cooking_helper import get_random_recipe, load_recipes, format_cooking_sentence
+from cooking.cooking_helper import load_recipes, handle_cooking
 from timer import handle_timer
+from music import handle_music
 import os
 import time
-from word2number import w2n
-import re
-import threading
 
 
 def main():
@@ -65,24 +63,13 @@ def ensure_recordings_folder():
 
 
 def handle_prompt(prompt, d):
-    if prompt.startswith("Cooking"):
+    if prompt.lower().startswith("cooking"):
         return handle_cooking(d)
-    if prompt.startswith("Set a timer of"):
+    if prompt.lower().startswith("set a timer of"):
         return handle_timer(prompt, d)
-    if prompt.startswith("Play"):
+    if prompt.lower().startswith("play"):
         return handle_music(prompt, d)
-    
     return handle_ai(prompt, d)
-
-
-def handle_cooking(d):
-    recipe = get_random_recipe()
-    d.show_text(recipe['Ingredients'])
-    return [format_cooking_sentence(recipe)]
-
-
-def handle_music(prompt, d):
-    ...
 
 
 def handle_ai(prompt, d):
