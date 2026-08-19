@@ -15,7 +15,7 @@
  **Total**: 24 hours
 
 
-> The hours here do NOT include the hours coding.
+> The hours here do NOT include the hours coding. Those are registered using Hackatime.
 
 ## July 5: Started prototyping + visuals
 
@@ -285,3 +285,8 @@ Looking good!
 Feel like I'm really getting the hang of PCB making! At least at a hobby level
 
  **Time spent today: 2 hours**
+
+ # August 19:
+ - Ok so quick catchup: I asked for funding waited almmost three weeks, got refused, asked again, got refused, everytime for dumb reasons where the reviewers didn't look at my repo or even at my project (this was crazy btw, I had to fight for my life) 
+ - So I decided to take the initiative and order the PCBs in early July, knowing that I would get the funding later to pay off the debt
+ - 

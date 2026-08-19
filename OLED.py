@@ -80,7 +80,7 @@ def oled_metrics_loop(stop_event=None):
     heartbeat = True
     while stop_event is None or not stop_event.is_set():
         image = Image.new("1", (device.width, device.height), "black")
-        draw = ImageDraw.draw(image)
+        draw = ImageDraw.Draw(image)
         font = ImageFont.load_default()
 
         now, cpu_temp, bat_str = get_sys_metrics()
