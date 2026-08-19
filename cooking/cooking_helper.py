@@ -11,7 +11,7 @@ def get_random_recipe():
 def load_recipes():
     global recipes
     try:
-        with open("recipes.csv", newline="", encoding="utf-8") as csvfile:
+        with open("cooking/recipes.csv", newline="", encoding="utf-8") as csvfile:
             recipes = list(csv.DictReader(csvfile))
     except FileNotFoundError:
         print("Couldn't find recipes.csv!")

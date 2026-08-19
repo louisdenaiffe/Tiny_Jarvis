@@ -50,6 +50,9 @@ def process_recording(audio_file, d):
             if not speech_success:
                 print("Failed to stream speech")
 
+    except KeyboardInterrupt:
+        print("Terminating this program...")
+        
     except Exception as e:
         print(f"[ERROR IN PIPELINE]: {e} ")
 
