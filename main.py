@@ -13,13 +13,21 @@ import random
 
 def main():
     d = initialize()
-    while True:
-        audio_file = listener.get_latest_recordings()
-        if not audio_file:  # if audio recordings are found in recordings/
-            time.sleep(0.2)
-            continue
-        process_recording(audio_file, d)
+    try:
+        while True:
+            audio_file = listener.get_latest_recordings()
+            if not audio_file:  # if audio recordings are found in recordings/
+                time.sleep(0.2)
+                continue
+            process_recording(audio_file, d)
 
+    except KeyboardInterrupt:
+        print("Terminating this program...")
+
+    finally:
+        d.stop()
+        listener.shutdown()
+        
 
 def initialize():
     d = AssistantDisplay()
@@ -50,9 +58,6 @@ def process_recording(audio_file, d):
             if not speech_success:
                 print("Failed to stream speech")
 
-    except KeyboardInterrupt:
-        print("Terminating this program...")
-        
     except Exception as e:
         print(f"[ERROR IN PIPELINE]: {e} ")
 

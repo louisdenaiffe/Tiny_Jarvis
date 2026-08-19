@@ -99,3 +99,19 @@ def init_listener():
         print("GPIO listeners attached")
     elif not GPIO_AVAILABLE:
         print("GPIO not available. Button input disabled.")
+
+
+def shutdown():
+    global is_recording, audio_stream
+    print("Shutting down listener...")
+
+    if audio_stream:
+        try:
+            audio_stream.stop()
+            audio_stream.close()
+        except Exception as e:
+            print(f"Error closing audio stream: {e}")
+        finally:
+            audio_stream = None
+
+    is_recording = False
