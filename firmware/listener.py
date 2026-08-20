@@ -4,7 +4,7 @@ from scipy.io import wavfile
 import numpy as np
 import queue
 import subprocess
-from speaker import speak
+from firmware.speaker import speak
 
 
 try:

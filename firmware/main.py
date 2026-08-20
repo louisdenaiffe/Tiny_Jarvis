@@ -1,11 +1,11 @@
-import speaker  # Loads the pyaudio engine
-import listener # Same here, this will initialize listener.py once
-from transcriber import transcribe_audio
-from OLED import AssistantDisplay
-from ai import generate, sentence_buffer
-from cooking.cooking_helper import load_recipes, handle_cooking
-from timer import handle_timer
-from music import handle_music
+import firmware.speaker as speaker  # Loads the pyaudio engine
+import firmware.listener as listener # Same here, this will initialize listener.py once
+from firmware.transcriber import transcribe_audio
+from firmware.OLED import AssistantDisplay
+from firmware.ai import generate, sentence_buffer
+from firmware.cooking.cooking_helper import load_recipes, handle_cooking
+from firmware.timer import handle_timer
+from firmware.music import handle_music
 import os
 import time
 import random

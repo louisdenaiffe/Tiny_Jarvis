@@ -1,7 +1,7 @@
 import re
 import threading
 from word2number import w2n
-import speaker
+import firmware.speaker as speaker
 import time
 
 
