@@ -11,8 +11,9 @@
  - [July 21](#july-21-schematic-and-pcb-error-checking) : 3 hours
  - [July 22](#july-22-more-schematic-before-ordering) : 2 hours
  - [July 23](#june-23-dfm-checks--silkscreen-logo-added) : 2 hours
+ - [August 19](#august-19-receiving-the-pcb-batch-number-2) : 1 hour
 
- **Total**: 24 hours
+ **Total**: 25 hours
 
 
 > The hours here do NOT include the hours coding. Those are registered using Hackatime.
@@ -286,7 +287,14 @@ Feel like I'm really getting the hang of PCB making! At least at a hobby level
 
  **Time spent today: 2 hours**
 
- # August 19:
+ # August 19: Receiving the PCB batch number 2!
  - Ok so quick catchup: I asked for funding waited almmost three weeks, got refused, asked again, got refused, everytime for dumb reasons where the reviewers didn't look at my repo or even at my project (this was crazy btw, I had to fight for my life) 
  - So I decided to take the initiative and order the PCBs in early July, knowing that I would get the funding later to pay off the debt
- - 
+ 
+ I got them today! This is a preview of what it would look like, not soldered yet and speakers not connected
+![image](https://cdn.hackclub.com/01a01e08-cb3f-7aaf-9e4b-f9ef1785e805/IMG_5995.jpeg)
+
+I then tried soldering for a bit, but realized that I wasn't making any progress and mostly just destroying the board, so
+I made the choice of waiting until I got the 80$ to continue
+
+**Time spent today : 1 hour**

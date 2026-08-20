@@ -11,7 +11,7 @@ try:
     import sounddevice as sd
     SOUNDDEVICE_AVAILABLE = True
 except Exception as e:
-    print("Couldn't initalize sounddevice library... {e}")
+    print(f"Couldn't initalize sounddevice library... {e}")
     SOUNDDEVICE_AVAILABLE = False
 
 
@@ -90,6 +90,7 @@ def safe_shutdown():
             speak(["Failed to shutdown... Have you read the recommendation in the README.md?"])
         except:
             print("Speaker unavailable")
+
 
 def init_listener():
     if GPIO_AVAILABLE and SOUNDDEVICE_AVAILABLE:
