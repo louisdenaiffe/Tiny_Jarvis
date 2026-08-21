@@ -49,7 +49,7 @@ fi
 I2C_WAS_ENABLED=false
 
 echo ""
-echo "[1/12] Installing system dependencies..."
+echo "[1/13] Installing system dependencies..."
 
 sudo apt update
 sudo apt install -y \
@@ -77,7 +77,7 @@ sudo apt install -y \
     gstreamer1.0-libav
 
 echo ""
-echo "[2/12] Installing Mopidy..."
+echo "[2/13] Installing Mopidy..."
 
 sudo mkdir -p /etc/apt/keyrings
 
@@ -91,19 +91,25 @@ sudo apt update
 sudo apt install -y mopidy
 
 echo ""
-echo "[3/12] Installing Mopidy-YouTube..."
+echo "[3/13] Installing Mopidy-YouTube..."
 
 # Install the Chreece fork directly.
 sudo python3 -m pip install --break-system-packages \
     "https://github.com/Chreece/mopidy-youtube/archive/refs/heads/develop.zip"
 
 echo ""
-echo "[4/12] Installing yt-dlp..."
+echo "[4/13] Installing ytMusic API..."
+
+sudo python3 -m pip install --break-system-packages \
+    ytmusicapi
+
+echo ""
+echo "[5/13] Installing yt-dlp..."
 
 sudo python3 -m pip install --break-system-packages --upgrade yt-dlp
 
 echo ""
-echo "[5/12] Configuring Mopidy..."
+echo "[6/13] Configuring Mopidy..."
 
 sudo mkdir -p /var/lib/mopidy
 sudo mkdir -p /var/log/mopidy
@@ -126,17 +132,16 @@ port = 6680
 enabled = true
 youtube_dl_package = yt_dlp
 search_results = 15
-threads_max = 4
 EOF
 
 echo ""
-echo "[6/12] Enabling Mopidy..."
+echo "[7/13] Enabling Mopidy..."
 
 sudo systemctl daemon-reload
 sudo systemctl enable mopidy
 
 echo ""
-echo "[7/12] Checking GPU memory allocation..."
+echo "[8/13] Checking GPU memory allocation..."
 
 GPU_MEM=$(vcgencmd get_mem gpu 2>/dev/null | cut -d= -f2 | cut -dM -f1 || echo 16)
 
@@ -147,7 +152,7 @@ if [ "$GPU_MEM" -gt 16 ]; then
 fi
 
 echo ""
-echo "[8/12] Enabling I2C interface..."
+echo "[9/13] Enabling I2C interface..."
 
 if ! grep -q "^dtparam=i2c_arm=on" /boot/firmware/config.txt 2>/dev/null; then
     echo "dtparam=i2c_arm=on" | sudo tee -a /boot/firmware/config.txt > /dev/null
@@ -160,13 +165,13 @@ fi
 sudo modprobe i2c-dev 2>/dev/null || true
 
 echo ""
-echo "[9/12] Creating virtual environment..."
+echo "[10/13] Creating virtual environment..."
 
 python3 -m venv .venv
 source .venv/bin/activate
 
 echo ""
-echo "[10/12] Installing Python packages..."
+echo "[11/13] Installing Python packages..."
 
 pip install --upgrade pip
 pip install -r requirements.txt
@@ -179,7 +184,7 @@ CMAKE_ARGS="-DLLAMA_NATIVE=ON -DLLAMA_ARM_ARCH=armv8.4-a" \
     pip install llama-cpp-python --no-cache-dir
 
 echo ""
-echo "[11/12] Setting up performance mode..."
+echo "[12/13] Setting up performance mode..."
 
 sudo tee /etc/systemd/system/cpu-performance.service > /dev/null << 'EOF'
 [Unit]
@@ -204,7 +209,7 @@ echo "Creating necessary directories..."
 mkdir -p models piper_voices recordings
 
 echo ""
-echo "[12/12] Setting up Tiny Jarvis as a systemd service..."
+echo "[13/13] Setting up Tiny Jarvis as a systemd service..."
 
 PROJECT_DIR=$(pwd)
 USER_NAME=$(whoami)
@@ -265,6 +270,7 @@ echo ""
 echo "Music stack:"
 echo "  Mopidy:          installed"
 echo "  Mopidy-YouTube:  Chreece fork"
+echo "  ytMusic API:     installed"
 echo "  yt-dlp:          installed"
 echo ""
 
@@ -277,6 +283,7 @@ echo "  Start Jarvis:    sudo systemctl start tiny-jarvis"
 echo "  Stop Jarvis:     sudo systemctl stop tiny-jarvis"
 echo "  Jarvis status:   sudo systemctl status tiny-jarvis"
 echo ""
+
 echo "Logs:"
 echo "  Mopidy:          sudo journalctl -u mopidy -f"
 echo "  Tiny Jarvis:     sudo journalctl -u tiny-jarvis -f"

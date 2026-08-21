@@ -80,8 +80,3 @@ def play_track(track):
     mopidy_request(
         "core.playback.play"
     )
-
-
-
-# For testing purposes (python music,py)
-handle_music(input("Search for something: "), d=None)

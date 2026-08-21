@@ -38,7 +38,6 @@ chmod +x install.sh
 You may of course choose a different AI model if you wish, but this is the current recommended one for a Raspberry Pi 5.\
 Feel free as well to choose a different Piper TTS voice!
 
-```
 
 # Features
  - "Play ..." --> Tiny_Jarvis will search a free online music database for that query using Mopidy and stream the music through the speakers. (Still in development, and only works when connected to wi-fi)
