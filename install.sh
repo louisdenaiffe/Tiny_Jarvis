@@ -49,7 +49,8 @@ fi
 I2C_WAS_ENABLED=false
 
 echo ""
-echo "[1/10] Installing system dependencies..."
+echo "[1/12] Installing system dependencies..."
+
 sudo apt update
 sudo apt install -y \
     git \
@@ -68,20 +69,86 @@ sudo apt install -y \
     cmake \
     build-essential \
     wget \
-    librespot \
     swig \
-    liblgpio-dev 
+    liblgpio-dev \
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-ugly \
+    gstreamer1.0-libav
 
 echo ""
-echo "[2/10] Checking GPU memory allocation..."
-GPU_MEM=$(vcgencmd get_mem gpu | cut -d= -f2 | cut -dM -f1)
+echo "[2/12] Installing Mopidy..."
+
+sudo mkdir -p /etc/apt/keyrings
+
+sudo wget -q -O /etc/apt/keyrings/mopidy-archive-keyring.gpg \
+    https://apt.mopidy.com/mopidy-archive-keyring.gpg
+
+sudo wget -q -O /etc/apt/sources.list.d/mopidy.sources \
+    https://apt.mopidy.com/trixie.sources
+
+sudo apt update
+sudo apt install -y mopidy
+
+echo ""
+echo "[3/12] Installing Mopidy-YouTube..."
+
+# Install the Chreece fork directly.
+sudo python3 -m pip install --break-system-packages \
+    "https://github.com/Chreece/mopidy-youtube/archive/refs/heads/develop.zip"
+
+echo ""
+echo "[4/12] Installing yt-dlp..."
+
+sudo python3 -m pip install --break-system-packages --upgrade yt-dlp
+
+echo ""
+echo "[5/12] Configuring Mopidy..."
+
+sudo mkdir -p /var/lib/mopidy
+sudo mkdir -p /var/log/mopidy
+
+sudo tee /etc/mopidy/mopidy.conf > /dev/null << 'EOF'
+[core]
+cache_dir = /var/cache/mopidy
+config_dir = /etc/mopidy
+data_dir = /var/lib/mopidy
+
+[audio]
+output = autoaudiosink
+
+[http]
+enabled = true
+hostname = 127.0.0.1
+port = 6680
+
+[youtube]
+enabled = true
+youtube_dl_package = yt_dlp
+search_results = 15
+threads_max = 4
+EOF
+
+echo ""
+echo "[6/12] Enabling Mopidy..."
+
+sudo systemctl daemon-reload
+sudo systemctl enable mopidy
+
+echo ""
+echo "[7/12] Checking GPU memory allocation..."
+
+GPU_MEM=$(vcgencmd get_mem gpu 2>/dev/null | cut -d= -f2 | cut -dM -f1 || echo 16)
+
 if [ "$GPU_MEM" -gt 16 ]; then
-    echo "WARNING: GPU memory is ${GPU_MEM}M. For best performance, set gpu_mem=16 in /boot/firmware/config.txt"
-    echo "Current setting: $(vcgencmd get_mem gpu)"
+    echo "WARNING: GPU memory is ${GPU_MEM}M."
+    echo "For best performance, set gpu_mem=16 in /boot/firmware/config.txt"
+    echo "Current setting: $(vcgencmd get_mem gpu 2>/dev/null || echo 'unknown')"
 fi
 
 echo ""
-echo "[3/10] Enabling I2C interface..."
+echo "[8/12] Enabling I2C interface..."
+
 if ! grep -q "^dtparam=i2c_arm=on" /boot/firmware/config.txt 2>/dev/null; then
     echo "dtparam=i2c_arm=on" | sudo tee -a /boot/firmware/config.txt > /dev/null
     echo "I2C enabled in config.txt. Reboot required for full effect."
@@ -89,26 +156,31 @@ if ! grep -q "^dtparam=i2c_arm=on" /boot/firmware/config.txt 2>/dev/null; then
 else
     echo "I2C already enabled."
 fi
+
 sudo modprobe i2c-dev 2>/dev/null || true
 
 echo ""
-echo "[4/10] Creating virtual environment..."
+echo "[9/12] Creating virtual environment..."
+
 python3 -m venv .venv
 source .venv/bin/activate
 
 echo ""
-echo "[5/10] Installing Python packages..."
+echo "[10/12] Installing Python packages..."
+
 pip install --upgrade pip
 pip install -r requirements.txt
 
 echo ""
-echo "[6/10] Installing llama-cpp-python with ARM optimizations..."
+echo "Installing llama-cpp-python with ARM optimizations..."
 echo "This will take 10-30 minutes. Grab a coffee."
+
 CMAKE_ARGS="-DLLAMA_NATIVE=ON -DLLAMA_ARM_ARCH=armv8.4-a" \
     pip install llama-cpp-python --no-cache-dir
 
 echo ""
-echo "[7/10] Setting up performance mode..."
+echo "[11/12] Setting up performance mode..."
+
 sudo tee /etc/systemd/system/cpu-performance.service > /dev/null << 'EOF'
 [Unit]
 Description=Set CPU governor to performance
@@ -122,15 +194,17 @@ RemainAfterExit=yes
 [Install]
 WantedBy=multi-user.target
 EOF
+
 sudo systemctl daemon-reload
 sudo systemctl enable --now cpu-performance
 
 echo ""
-echo "[8/10] Creating necessary directories..."
+echo "Creating necessary directories..."
+
 mkdir -p models piper_voices recordings
 
 echo ""
-echo "[9/10] Setting up Tiny Jarvis as a systemd service..."
+echo "[12/12] Setting up Tiny Jarvis as a systemd service..."
 
 PROJECT_DIR=$(pwd)
 USER_NAME=$(whoami)
@@ -138,8 +212,8 @@ USER_NAME=$(whoami)
 sudo tee /etc/systemd/system/tiny-jarvis.service > /dev/null << EOF
 [Unit]
 Description=Tiny Jarvis - Local offline voice AI agent
-After=network.target sound.target
-Wants=network.target
+After=network-online.target sound.target mopidy.service
+Wants=network-online.target mopidy.service
 
 [Service]
 Type=simple
@@ -162,25 +236,24 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable tiny-jarvis.service
 
-echo "  -> Service created: tiny-jarvis.service"
-echo "  -> Start it now:    sudo systemctl start tiny-jarvis"
-echo "  -> Check status:    sudo systemctl status tiny-jarvis"
-echo "  -> View logs:       sudo journalctl -u tiny-jarvis -f"
-
 echo ""
-echo "[10/10] Downloading AI model and Piper voice..."
+echo "=========================================="
+echo "  Downloading AI model and Piper voice"
+echo "=========================================="
 
 if [ "$SKIP_MODEL" = true ]; then
     echo "  -> Skipping model download (--skip-model flag set)"
 else
     echo "  -> Downloading Llama 3.2 3B (Q4_K_M) ~2GB..."
+
     wget -q --show-progress -P models/ \
         https://huggingface.co/osmapi/Nidum-Llama-3.2-3B-Uncensored-GGUF/resolve/main/model-Q4_K_M.gguf \
-        || echo "WARNING: Model download failed. Download manually from: https://huggingface.co/osmapi/Nidum-Llama-3.2-3B-Uncensored-GGUF"
+        || echo "WARNING: Model download failed."
 
     echo "  -> Downloading Piper voice..."
+
     python -m piper.download_voices en_US-lessac-medium \
-        || echo "WARNING: Piper voice download failed. Run manually: python -m piper.download_voices en_US-lessac-medium"
+        || echo "WARNING: Piper voice download failed."
 fi
 
 echo ""
@@ -188,20 +261,35 @@ echo "=========================================="
 echo "  Installation complete!"
 echo "=========================================="
 echo ""
-echo "Quick commands:"
-echo "  Start service:     sudo systemctl start tiny-jarvis"
-echo "  Stop service:      sudo systemctl stop tiny-jarvis"
-echo "  Check status:      sudo systemctl status tiny-jarvis"
-echo "  View logs:         sudo journalctl -u tiny-jarvis -f"
-echo "  Disable auto-start: sudo systemctl disable tiny-jarvis"
+
+echo "Music stack:"
+echo "  Mopidy:          installed"
+echo "  Mopidy-YouTube:  Chreece fork"
+echo "  yt-dlp:          installed"
 echo ""
-echo "Manual run (for testing):"
+
+echo "Services:"
+echo "  Start Mopidy:    sudo systemctl start mopidy"
+echo "  Stop Mopidy:     sudo systemctl stop mopidy"
+echo "  Mopidy status:   sudo systemctl status mopidy"
+echo ""
+echo "  Start Jarvis:    sudo systemctl start tiny-jarvis"
+echo "  Stop Jarvis:     sudo systemctl stop tiny-jarvis"
+echo "  Jarvis status:   sudo systemctl status tiny-jarvis"
+echo ""
+echo "Logs:"
+echo "  Mopidy:          sudo journalctl -u mopidy -f"
+echo "  Tiny Jarvis:     sudo journalctl -u tiny-jarvis -f"
+echo ""
+
+echo "Manual run:"
 echo "  source .venv/bin/activate"
 echo "  python main.py"
 
 if [ "$I2C_WAS_ENABLED" = true ]; then
     echo ""
     echo "NOTE: I2C was newly enabled. A reboot is required for OLED to work."
+
     if [ "$AUTO_REBOOT" = true ]; then
         echo ""
         echo "Auto-rebooting in 10 seconds... (Ctrl+C to cancel)"
