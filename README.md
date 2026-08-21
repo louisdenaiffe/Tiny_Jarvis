@@ -38,13 +38,6 @@ chmod +x install.sh
 You may of course choose a different AI model if you wish, but this is the current recommended one for a Raspberry Pi 5.\
 Feel free as well to choose a different Piper TTS voice!
 
-For the second button to work flawlessly, I would recommend editing the `/etc/sudoers` file by running 
-```bash
-sudo visudo
-```
-then add this at the bottom, replacing `username` with your username:
-```bash
-username ALL=(ALL) NOPASSWD: /sbin/poweroff, /sbin/reboot
 ```
 
 # Features

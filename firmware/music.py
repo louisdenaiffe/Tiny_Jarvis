@@ -50,6 +50,7 @@ def mopidy_request(method, params=None):
 
 
 def search_music(query):
+    print("Calling Mopidy...")
     results = mopidy_request(
         "core.library.search",
         {
@@ -58,6 +59,7 @@ def search_music(query):
             }
         }
     )
+    print("Mopidy responded, ", results)
     tracks = []
     for result in results:
         for track in result.get("tracks", []):
@@ -82,4 +84,4 @@ def play_track(track):
 
 
 # For testing purposes (python music,py)
-handle_music(input("Search for something"), d=None)
+handle_music(input("Search for something: "), d=None)
