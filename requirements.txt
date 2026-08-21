@@ -12,3 +12,5 @@ pyaudio
 word2number
 requests
 psutil
+feedparser
+trafilatura

@@ -77,10 +77,9 @@ def handle_prompt(prompt, d):
     if prompt.lower().startswith("set a timer of"):
         return handle_timer(prompt, d)
     if prompt.lower().startswith("play"):
-        # return handle_music(prompt, d)
-        pass
+        return handle_music(prompt, d)
     if prompt.lower().startswith("flip"):
-        return handle_flip()
+        return random.choice(["Heads", "Tails"])
     return handle_ai(prompt, d)
 
 
@@ -95,10 +94,6 @@ def cleanup_recording(audio_file, d):
     if os.path.exists(audio_file):
         os.remove(audio_file)
         print("Deleted recording file")
-
-
-def handle_flip():
-    return random.choice(["Heads", "Tails"])
 
 
 if __name__ == "__main__":

@@ -57,8 +57,6 @@ OLED screen display a variety of animations meanwhile.\
 The other button serves a single purpose: to turn off the Raspberry Pi 5 safely through `sudo poweroff`.
 
 
-
-
 # Hardware
 
 See [JOURNAL.md](JOURNAL.md)
