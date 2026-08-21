@@ -63,7 +63,7 @@ sudo apt install -y \
     libfreetype6-dev \
     liblcms2-dev \
     libopenjp2-7-dev \
-    libtiff6-dev \
+    libtiff-dev \
     libportaudio2 \
     portaudio19-dev \
     cmake \
