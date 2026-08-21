@@ -40,7 +40,7 @@ Feel free as well to choose a different Piper TTS voice!
 
 
 # Features
- - "Play ..." --> Tiny_Jarvis will search a free online music database for that query using Mopidy and stream the music through the speakers. (Still in development, and only works when connected to wi-fi)
+ - "Play ..." --> Tiny Jarvis will search and play music from YouTube Music using natural voice commands. (This only works when connected to wi-fi)
  - "Cooking ..." --> Tiny_Jarvis will output a random recipe from a list, display the ingredients, and read the recipe out loud.
  - "Set a timer of ... minutes" --> Tiny_Jarvis will set a timer for the needed time, and display it in real time on the OLED screen.
  - "Flip a coin..." --> self-explanatory
