@@ -6,6 +6,7 @@ from ai import generate, sentence_buffer
 from cooking.cooking_helper import load_recipes, handle_cooking
 from .timer import handle_timer
 from music import handle_music
+from news.news import parse_rss, start_news_scheduler, read_file
 import os
 import time
 import random
@@ -34,6 +35,7 @@ def initialize():
     listener.init_listener()
     ensure_recordings_folder()
     load_recipes()
+    start_news_scheduler(interval_seconds=3600)
     print("Tiny Jarvis is active and listening!")
     d.show_metrics()
     return d
@@ -80,6 +82,8 @@ def handle_prompt(prompt, d):
         return handle_music(prompt, d)
     if prompt.lower().startswith("flip"):
         return random.choice(["Heads", "Tails"])
+    if "news" in prompt.lower():
+        return handle_news(d)
     return handle_ai(prompt, d)
 
 
@@ -88,6 +92,14 @@ def handle_ai(prompt, d):
     d.show_image("thinking_animation.gif")
     raw_token_stream = generate(prompt)
     return sentence_buffer(raw_token_stream)
+
+
+def handle_news(d):
+    d.show_image("thinking_animation.gif")
+    if read_file() != "":
+        return [read_file()]
+    else:
+        return ["Nothing yet"]
 
 
 def cleanup_recording(audio_file, d):

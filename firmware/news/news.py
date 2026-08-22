@@ -1,6 +1,8 @@
 import feedparser
 from trafilatura import fetch_url, extract
 from ai import generate
+import time
+import threading
 import re
 
 
@@ -37,7 +39,7 @@ def parse_rss():
             "Article: " + content
         )
         summaries.append("".join(generate(prompt, False)))
-    print(summaries)
+    return summaries
 
 
 def extract_rss(link):
@@ -57,6 +59,32 @@ def select_headlines(titles):
     return "".join(generate(prompt, False))
 
 
-parse_rss()
+def save_to_file():
+    summaries = parse_rss()
+    with open("news.txt", "w") as file:
+        for summary in summaries:
+            file.write(summary + "\n")
+
+
+def read_file():
+    try:
+        with open("news.txt", "r") as file:
+            return file.read()
+    except FileNotFoundError:
+        return ""
+
+
+def start_news_scheduler(interval_seconds=3600):
+    def worker():
+        while True:
+            try:
+                save_to_file()
+            except Exception as e:
+                print(f"News scheduler error: {e}")
+            time.sleep(interval_seconds)
+    thread = threading.Thread(target=worker, daemon=True)
+    thread.start()
+
+
 # Here's the structure for future debugging: the feedparser object is a dictionary with many top-level keys
 # Amongst these keys is the "entries" key, which is itself a list of dictionaries.
