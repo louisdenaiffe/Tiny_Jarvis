@@ -29,8 +29,7 @@ def generate(prompt: str, streaming: bool):
                 'role': 'user',
                 'content': "Answer in a concise, thoughtful way to the following prompt: " + prompt
             }],
-            stream = True if streaming else False,
-            cache_prompt = True   # avoids recalculating the whole history on every turn
+            stream = True if streaming else False
         )
         if streaming:
             for chunk in response:
