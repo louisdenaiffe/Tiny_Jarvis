@@ -21,7 +21,7 @@ def get_llm():
     return llm
 
 
-def generate(prompt):
+def generate(prompt: str, streaming: bool):
     try :
         model = get_llm()
         response = model.create_chat_completion(
@@ -29,13 +29,16 @@ def generate(prompt):
                 'role': 'user',
                 'content': "Answer in a concise, thoughtful way to the following prompt: " + prompt
             }],
-            stream = True,
+            stream = True if streaming else False,
             cache_prompt = True   # avoids recalculating the whole history on every turn
         )
-        for chunk in response:
-            delta = chunk['choices'][0]['delta']
-            if 'content' in delta:
-                yield delta['content']
+        if streaming:
+            for chunk in response:
+                delta = chunk['choices'][0]['delta']
+                if 'content' in delta:
+                    yield delta['content']
+        else:
+            yield response['choices'][0]['message']['content']
     except Exception as e:
         print(f"Generation failed. {e}")
         yield "I ran into an issue generating a response."
