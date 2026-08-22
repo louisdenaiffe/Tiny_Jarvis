@@ -38,23 +38,25 @@ chmod +x install.sh
 You may of course choose a different AI model if you wish, but this is the current recommended one for a Raspberry Pi 5.\
 Feel free as well to choose a different Piper TTS voice!
 
+> Note: this will affect the output time
+
 
 # Features
  - "Play ..." --> Tiny Jarvis will search and play music from YouTube Music using natural voice commands. (This only works when connected to wi-fi)
- - "Cooking ..." --> Tiny_Jarvis will output a random recipe from a list, display the ingredients, and read the recipe out loud.
+ - "Cooking ..." --> Tiny_Jarvis will output a random recipe from a list with over 50 simples recipes, display the ingredients, and read the recipe out loud.
  - "Set a timer of ... minutes" --> Tiny_Jarvis will set a timer for the needed time, and display it in real time on the OLED screen.
  - "Flip a coin..." --> self-explanatory
+ - "What's the news?" --> Tiny_Jarvis will choose between 15 daily headlines from BBC World for the 3 most impactful, read the articles and generate three 3-4 sentence summaries.
 
 
 # How it works
 
-The OLED screen shows an `IDLE` animation when idle.\
-User presses a button, gives a command, and releases the button when done speaking.\
-The captured audio is translated into text by [faster-whisper](https://pypi.org/project/faster-whisper/0.3.0/).
-That text is given as a prompt to a model of your choice using [llama.cpp](https://github.com/abetlen/llama-cpp-python) (optimized for Raspberry pi 5), preferably a low-parameter model like Llama-3.2-3B, balancing speed and quality.\
-The model's ouput is streamed into [Piper TTS](https://github.com/rhasspy/piper), a text-to-speech model, and played through the speakers (stereo sound).\
-OLED screen display a variety of animations meanwhile.\
-The other button serves a single purpose: to turn off the Raspberry Pi 5 safely through `sudo poweroff`.
+ - User presses a button, gives a command, and releases the button when done speaking.
+ - The captured audio is translated into text by [faster-whisper](https://pypi.org/project/faster-whisper/0.3.0/).
+ - That text is given as a prompt to a model of your choice using [llama.cpp](https://github.com/abetlen/llama-cpp-python) (optimized for Raspberry pi 5), preferably a low-parameter model like Llama-3.2-3B, balancing speed and quality.
+ - The model's ouput is streamed into [Piper TTS](https://github.com/rhasspy/piper), a text-to-speech model, and played through the speakers (stereo sound) thanks to digital-to-analog amplifiers, which allows for good sound quality.
+ - OLED screen display a variety of animations to accompany every step of the experience.
+ - The other button serves a single purpose: to turn off the Raspberry Pi 5 safely through `sudo poweroff`.
 
 
 # Hardware
