@@ -18,7 +18,7 @@ for item in entries:
     links.append(item["link"])
 
 
-html = fetch_url(links[1])
+html = fetch_url(links[2])
 text = extract(html, target_language="en")
 prompt = (
     "Summarize the following news article in 3-4 clear, objective sentences."

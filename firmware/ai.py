@@ -17,6 +17,7 @@ def get_llm():
             n_ctx = 2048,
             n_threads = 4,  # cos rpi5 processor has 4 cores
             flash_attn = True,  # optimizes the math heavy lifting
+            verbose = False
         )
     return llm
 
