@@ -1,6 +1,6 @@
 import feedparser
 from trafilatura import fetch_url, extract
-from firmware.ai import generate
+from ai import generate
 
 
 d = feedparser.parse("http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/technology/rss.xml")
