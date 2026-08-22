@@ -29,7 +29,7 @@ prompt = (
 # prompt = "Below are 15 news headlines from today. Pick the 3 most globally impactful stories, synthesize them into a concise 60-second news anchor script, and avoid fluff."
 
 
-print(generate(prompt, False))
+print("".join(generate(prompt, False)))
 
 
 # Here's the structure for future debugging: the feedparser object is a dictionary with many top-level keys
