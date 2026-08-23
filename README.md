@@ -4,7 +4,9 @@ Tiny_Jarvis is a local, portable AI assistant that lives on a Raspberry Pi 5 wit
 
 It allows for infinite creativity as to what it can do. In my case, for instance, I use it to help me with cooking. It chooses a recipe, displays the ingredients and guides me through the recipe out loud. Tiny Jarvis also sets a timer for the oven, or even for the washing machine in college.
 
-Up to you now...
+During the day, it grabs the 15 main headlines from BBC World and chooses the three that have the most impact. It then reads the corresponding articles, and generates a summary of each one!
+
+Up to you now to add any features you want to.
 
 ![image](https://cdn.hackclub.com/01a01e08-cb3f-7aaf-9e4b-f9ef1785e805/IMG_5995.jpeg)
 
@@ -42,11 +44,13 @@ Feel free as well to choose a different Piper TTS voice!
 
 
 # Features
+
  - "Play ..." --> Tiny Jarvis will search and play music from YouTube Music using natural voice commands. (This only works when connected to wi-fi)
  - "Cooking ..." --> Tiny_Jarvis will output a random recipe from a list with over 50 simples recipes, display the ingredients, and read the recipe out loud.
  - "Set a timer of ... minutes" --> Tiny_Jarvis will set a timer for the needed time, and display it in real time on the OLED screen.
  - "Flip a coin..." --> self-explanatory
  - "What's the news?" --> Tiny_Jarvis will choose between 15 daily headlines from BBC World for the 3 most impactful, read the articles and generate three 3-4 sentence summaries.
+ - Idle screen: system metrics screen
 
 
 # How it works
