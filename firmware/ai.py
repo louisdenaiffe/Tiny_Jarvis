@@ -1,5 +1,6 @@
 from llama_cpp import Llama
 import os
+from memory.memory import get_recent_memories
 
 
 MODEL_PATH = "./models/model-Q4_K_M.gguf"
@@ -25,10 +26,23 @@ def get_llm():
 def generate(prompt: str, streaming: bool):
     try :
         model = get_llm()
+        memories = get_recent_memories()
+        memory_context = "\n".join(f"- {memory[0]}" for memory in memories)
+
+        content = f"""
+        You are Tiny_Jarvis, a helpful local AI assistant.
+        Relevant memories about the user:
+        {memory_context}
+        User's request:
+        {prompt}
+        Use the memories when they are relevant. Do not mention the memory system unless asked.
+        Answer concisely.
+        """
+
         response = model.create_chat_completion(
             messages=[{
                 'role': 'user',
-                'content': "Answer in a concise, thoughtful way to the following prompt: " + prompt
+                'content': content
             }],
             stream = True if streaming else False
         )
