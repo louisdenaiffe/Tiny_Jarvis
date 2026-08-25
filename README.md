@@ -6,6 +6,8 @@ It allows for infinite creativity as to what it can do. In my case, for instance
 
 During the day, it grabs the 15 main headlines from BBC World and chooses the three that have the most impact. It then reads the corresponding articles, and generates a summary of each one!
 
+Plus, it has memory! It can remember anything for you.
+
 Up to you now to add any features you want to.
 
 ![image](https://cdn.hackclub.com/01a01e08-cb3f-7aaf-9e4b-f9ef1785e805/IMG_5995.jpeg)
