@@ -44,3 +44,6 @@ def delete_all():
         con.commit()
     except Exception as e:
         return f"Error while deleting memories: {e}"
+
+
+# Next improvement: the user says "Remember this: ..." 
