@@ -64,9 +64,17 @@ Feel free as well to choose a different Piper TTS voice!
  - OLED screen display a variety of animations to accompany every step of the experience.
  - The other button serves a single purpose: to turn off the Raspberry Pi 5 safely through `sudo poweroff`.
 
-
 # Hardware
 
+## Schematic and PCB screenshots
+
+**Schematic:**
+![image](https://cdn.hackclub.com/01a0495e-80f4-7529-ad77-2e248dcdb2cc/paste-1787937324226.png)
+
+**PCB:**
+![image](https://cdn.hackclub.com/01a04960-4649-7c62-be8d-87214eabde21/paste-1787937440559.png)
+
+## Journal
 See [JOURNAL.md](JOURNAL.md)
 
 Check out the PCB files in `pcb/`.
