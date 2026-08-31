@@ -23,7 +23,7 @@ def get_llm():
     return llm
 
 
-def generate(prompt: str, streaming: bool):
+def generate(prompt: str, streaming: bool = True):
     try :
         model = get_llm()
         memories = get_recent_memories()

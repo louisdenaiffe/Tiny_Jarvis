@@ -6,7 +6,7 @@ from ai import generate, sentence_buffer
 from cooking.cooking_helper import load_recipes, handle_cooking
 from .timer import handle_timer
 from music import handle_music
-from news.news import parse_rss, start_news_scheduler, read_file
+from news.news import start_news_scheduler, read_file
 import os
 import time
 import random
@@ -30,10 +30,11 @@ def main():
         listener.shutdown()
         
 
-def initialize():
+def initialize(listen=True):
     d = AssistantDisplay()
-    listener.init_listener()
-    ensure_recordings_folder()
+    if listen:
+        listener.init_listener()
+        ensure_recordings_folder()
     load_recipes()
     start_news_scheduler(interval_seconds=3600)
     print("Tiny Jarvis is active and listening!")
