@@ -56,6 +56,7 @@ def process_recording(audio_file, d):
         sentence_stream = handle_prompt(prompt, d)
 
         if sentence_stream:
+            d.show_waveform()
             speech_success = speaker.speak(sentence_stream)
 
             if not speech_success:
@@ -97,16 +98,15 @@ def handle_ai(prompt, d):
 
 def handle_news(d):
     d.show_image("thinking_animation.gif")
-    if read_file() != "":
-        return [read_file()]
-    else:
-        return ["Nothing yet"]
+    news = read_file()
+    return [news] if news else ["Nothing yet"]
 
 
 def cleanup_recording(audio_file, d):
     if os.path.exists(audio_file):
         os.remove(audio_file)
         print("Deleted recording file")
+    d.show_metrics()
 
 
 if __name__ == "__main__":

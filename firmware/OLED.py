@@ -8,6 +8,7 @@ import os
 import textwrap
 import psutil
 from datetime import datetime
+import random
 
 
 class DummyDevice:
@@ -102,6 +103,31 @@ def oled_metrics_loop(stop_event=None):
             time.sleep(0.1)
 
 
+def oled_waveform(stop_event=None):
+    bar_count = 16
+    gap = 2
+    frame_delay = 0.05
+    heights = [random.randint(5, device.height) for _ in range(bar_count)]
+    bar_space = device.width // bar_count
+    bar_width = bar_space - gap
+
+    while stop_event is None or not stop_event.is_set():
+        image = Image.new("1", (device.width, device.height), "black")
+        draw = ImageDraw.Draw(image)
+        for i in range(bar_count):
+            heights[i] += random.randint(-8, 8)
+            heights[i] = max(2, min(device.height, heights[i]))
+            x1 = i * bar_space
+            x2 = x1 + bar_width - 1
+            y1 = device.height - heights[i]
+            draw.rectangle(
+                (x1, y1, x2, device.height - 1),
+                fill=255
+            )
+        device.display(image)
+        time.sleep(frame_delay)
+
+
 class AssistantDisplay:
     def __init__(self):
         self.switch = threading.Event()
@@ -120,6 +146,11 @@ class AssistantDisplay:
         self.stop()
         self.switch.clear()
         self.thread = threading.Thread(target=oled_metrics_loop, args=(self.switch,))
+        self.thread.start()
+    def show_waveform(self):
+        self.stop()
+        self.switch.clear()
+        self.thread = threading.Thread(target=oled_waveform, args=(self.switch,))
         self.thread.start()
     def stop(self):
         self.switch.set()
